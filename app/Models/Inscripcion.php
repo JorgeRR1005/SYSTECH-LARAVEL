@@ -5,6 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * ╔══════════════════════════════════════════════════════════════════════════════╗
+ * ║                    PATRÓN ARQUITECTÓNICO: MVC OBSERVER                       ║
+ * ╠══════════════════════════════════════════════════════════════════════════════╣
+ * ║ Este modelo utiliza dispatchesEvents para notificar cambios a la Vista.      ║
+ * ║ Cada vez que el modelo se crea/actualiza/elimina, se dispara un evento.      ║
+ * ╚══════════════════════════════════════════════════════════════════════════════╝
+ */
+
+use App\Events\InscripcionChanged;
+
 class Inscripcion extends Model
 {
     use HasFactory;
@@ -20,6 +31,19 @@ class Inscripcion extends Model
         'talla',    
         'recibo',
         'estado'
+    ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | MVC OBSERVER - Dispatch Events on Model Changes
+    |--------------------------------------------------------------------------
+    | Estos eventos conectan el Model con la Vista a través del patrón
+    | MVC Observer arquitectónico.
+    */
+    protected $dispatchesEvents = [
+        'created' => InscripcionChanged::class,
+        'updated' => InscripcionChanged::class,
+        'deleted' => InscripcionChanged::class,
     ];
 
     /**
